@@ -21,7 +21,7 @@ namespace File_Manager
                 }
                 else if (fileInf.Exists)
                 {
-                    Console.WriteLine(string.Format("Information about file:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}", 
+                    Console.WriteLine(string.Format("Information about file:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
                         fileInf.Name, fileInf.Length, fileInf.LastWriteTime, fileInf.CreationTime));
                 }
                 else
@@ -32,7 +32,7 @@ namespace File_Manager
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-            }          
+            }
         }
 
         public void Remove(string path)
@@ -77,9 +77,9 @@ namespace File_Manager
                 }
             }
             catch (Exception e)
-            {               
+            {
                 Console.WriteLine(e.Message);
-            }           
+            }
         }
 
         public void MkDir(string dirName)
@@ -100,7 +100,6 @@ namespace File_Manager
             {
                 Console.WriteLine(e.Message);
             }
-
         }
 
         public void Copy(string path, string newPath)
@@ -114,7 +113,7 @@ namespace File_Manager
                 while (true)
                 {
                     try
-                    {                       
+                    {
                         if (fileInf.Exists && overwrite == true)
                         {
                             File.Copy(path, newPath, overwrite);
@@ -135,7 +134,7 @@ namespace File_Manager
                     }
                     catch
                     {
-                        Console.Write("Файл с таким именем уже существует в заданной директории. Заменить? Y/N :  "); 
+                        Console.Write("Файл с таким именем уже существует в заданной директории. Заменить? Y/N :  ");
                         // TODO: переделать момент с заменой файлов
                         string userAnswer = Console.ReadLine().ToUpper();
                         if (userAnswer == "Y")

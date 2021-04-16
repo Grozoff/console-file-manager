@@ -10,28 +10,21 @@ namespace File_Manager
         static void Main(string[] args)
         {
             Console.Title = "File Manager";
+            // TODO: закинуть комманды в отдельный класс и в Main создавать экземпляр класса комманд
             FileManager fm = new FileManager();
 
             Console.WriteLine("[help]   [cd]    [ls]    [inf]   [rm]    [mkfil]    [mkdir]    [cp]    [exit]\n");
 
             string currentDirectory = Directory.GetCurrentDirectory(); // TODO: сохранять состояние текущей директории
             string userCommand = string.Empty;
-            List<string> parameters = new List<string>();
-
-            #region Заглушки
-            string file = @"C:\Users\magnu\source\repos\123.txt";
-            string newFile = @"C:\Users\magnu\source\repos\12\123.txt";
-            string pathDir = @"C:\Users\magnu\Desktop\123";
-            string newPathDir = @"C:\Users\magnu\source\repos\12";
-            #endregion
 
             bool exit = true;
 
             while (exit)
             {
                 Console.WriteLine(string.Format(currentDirectory));
-
-                
+               
+                // TODO: закинуть парсер комманд в отдельный метод в классе комманд
                 Console.Write("Command: ");
                 userCommand = Console.ReadLine();
 
@@ -39,29 +32,21 @@ namespace File_Manager
                 {
                     continue;
                 }
-
-                string[] parts1 = userCommand.Split(new string[] { " \"" }, StringSplitOptions.None);
+                // TODO: добавить визможность писать пути без определения их в кавычки (для путей без пробелов)
+                //string[] dirtyCommands = userCommand.Split(new string[] { " \"" }, StringSplitOptions.None);
+                string[] dirtyCommands = Regex.Split(userCommand, " \"");
                 string[] clearCommands = new string[4];
 
-                for (int i = 0; i < parts1.Length; i++)
+                for (int i = 0; i < dirtyCommands.Length; i++)
                 {
-                    clearCommands[i] = parts1[i].Trim();
+                    clearCommands[i] = dirtyCommands[i].Trim();
                     clearCommands[i] = Regex.Replace(clearCommands[i], "\"", "");                    
                 }
-                
-
-                //string[] parts2 = Regex.Split(userCommand, " \"");
-
-                // TODO: парсинг путей с пробелами, пока выход сделать сплит не пробелом а запрещенным символом
-
-                //parameters.RemoveAll(WhiteParameters);
-
+                               
                 userCommand = clearCommands[0].ToLower();
-
-                // TODO: cd для навигации, ls для пэйджинга, inf для информации о файле/папки
-                // TODO: Ловля исключений
+                
+                // TODO: cd для навигации, ls для пэйджинга
                 // TODO: Отловить исключение с заменой файлов через foreach
-
 
                 switch (userCommand)
                 {
@@ -78,7 +63,7 @@ namespace File_Manager
                         fm.MkDir(clearCommands[1]);
                         break;
                     case "cp":
-                        fm.Copy(file, newFile);
+                        fm.Copy(clearCommands[1], clearCommands[2]);
                         break;
                     case "exit":
                         exit = false;
@@ -86,10 +71,10 @@ namespace File_Manager
                         break;
                     case "help":
                         Console.Clear();
-                        Console.WriteLine("[help] - Вызвать справку\n[cd] - навигация по каталогам\ncd .. переход в родительский каталог\n" +
-                            "cd \\путь к каталогу на текущем диске, например cd \\users[rm] - Удаление файла\\каталога\n" +
+                        Console.WriteLine("[help] - Вызвать справку\n[cd] - навигация по каталогам\ncd.. - переход на каталог выше\n" +
+                            "cd \"путь к каталогу на текущем диске\"\n[rm] - Удаление файла\\каталога\n" +
                             "[mkfil] - Создание файла\n[mkdir] - Создание каталога\n[cp] - Копирование файла\\директории\n" +
-                            "[exit] - Завершить работу файлового менеджера\n");
+                            "[exit] - Завершить работу файлового менеджера\nВсе пути к файлу или каталогу необходимо заключать в двойные кавычки!\n");
                         break;
                     default:
                         Console.WriteLine("Команда не найдена");
