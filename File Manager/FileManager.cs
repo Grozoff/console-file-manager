@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace File_Manager
 {
@@ -10,51 +11,75 @@ namespace File_Manager
         public void Information(string path)
         {
             FileInfo fileInf = new FileInfo(path);
-            Console.WriteLine(string.Format("Information about {0} :\nSize = {1} bytes\nLast modified on {2}\nCreation time on {3}", fileInf.Name, fileInf.Length, fileInf.LastWriteTime, fileInf.CreationTime));
+            DirectoryInfo dirInf = new DirectoryInfo(path);
+            try
+            {
+                if (dirInf.Exists)
+                {
+                    Console.WriteLine(string.Format("Information about directory:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
+                        dirInf.Name, dirInf.EnumerateFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length), dirInf.LastWriteTime, dirInf.CreationTime));
+                }
+                else if (fileInf.Exists)
+                {
+                    Console.WriteLine(string.Format("Information about file:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}", 
+                        fileInf.Name, fileInf.Length, fileInf.LastWriteTime, fileInf.CreationTime));
+                }
+                else
+                {
+                    Console.WriteLine("Папка или файл не найдены!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }          
         }
 
         public void Remove(string path)
         {
-            // TODO: упростить!!!!
             FileInfo fileInf = new FileInfo(path);
             DirectoryInfo dirInf = new DirectoryInfo(path);
-            if (Directory.Exists(path))
+            try
             {
                 if (dirInf.Exists)
                 {
                     dirInf.Delete(true);
                     Console.WriteLine("Папка удалена.");
                 }
-                else
-                {
-                    Console.WriteLine("Папка не найдена.");
-                }
-            }
-            else if (File.Exists(path))
-            {
-                if (fileInf.Exists)
+                else if (fileInf.Exists)
                 {
                     fileInf.Delete();
                     Console.WriteLine("Файл удален.");
                 }
                 else
                 {
-                    Console.WriteLine("Файл не найден.");
+                    Console.WriteLine("Папка или файл не найдены!");
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
         public void MkFile(string fileName)
         {
-            if (!File.Exists(fileName))
+            try
             {
-                File.Create(fileName).Close();
-                Console.WriteLine("Файл создан");
+                if (!File.Exists(fileName))
+                {
+                    File.Create(fileName).Close();
+                    Console.WriteLine("Файл создан");
+                }
+                else
+                {
+                    Console.WriteLine("Файл с таким именем уже существует");
+                }
             }
-            else
-            {
-                Console.WriteLine("Файл с таким именем уже существует");
-            }
+            catch (Exception e)
+            {               
+                Console.WriteLine(e.Message);
+            }           
         }
 
         public void MkDir(string dirName)
@@ -71,15 +96,16 @@ namespace File_Manager
                     Console.WriteLine("Папка с таким именем уже существует");
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Невозможно создать папку с таким именем");
+                Console.WriteLine(e.Message);
             }
 
         }
 
         public void Copy(string path, string newPath)
         {
+            // TODO: упростить!!!
             bool overwrite = false;
             FileInfo fileInf = new FileInfo(path);
 
@@ -149,7 +175,7 @@ namespace File_Manager
             }
             else
             {
-                Console.WriteLine("Нужно указать пути файла или директории");
+                Console.WriteLine("Нужно указать корректный путь к файлу или директории");
             }
         }
     }
