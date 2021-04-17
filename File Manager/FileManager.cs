@@ -8,7 +8,31 @@ namespace File_Manager
 {
     public class FileManager
     {
-        public void ChangeDirrectory(ref string currentDirectory)
+        public void ChangeDirectory(ref string currentDirectory, string directory)
+        {
+            if (directory.StartsWith('\\'))
+            {
+                string path = string.Format("{0}{1}", currentDirectory, directory);
+                if (Directory.Exists(path))
+                {
+                    currentDirectory = path;
+                }
+                else
+                {
+                    Console.WriteLine("Такой папки не существует");
+                }
+            }
+            else if ((!directory.StartsWith('\\')) && Directory.Exists(directory))
+            {
+                currentDirectory = directory;
+            }
+            else
+            {
+                Console.WriteLine("Что-то пошло не так");
+            }
+        }
+
+        public void ParentDirectory(ref string currentDirectory)
         {
             DirectoryInfo parentDirectory = Directory.GetParent(currentDirectory);
             if (parentDirectory == null)
@@ -48,13 +72,19 @@ namespace File_Manager
             }
         }
 
-        public void Remove(string path)
+        public void Remove(ref string currentDirectory, string path)
         {
             FileInfo fileInf = new FileInfo(path);
             DirectoryInfo dirInf = new DirectoryInfo(path);
             try
             {
-                if (dirInf.Exists)
+                if (dirInf.Exists && (currentDirectory == path))
+                {
+                    dirInf.Delete(true);
+                    ParentDirectory(ref currentDirectory);
+                    Console.WriteLine("Папка удалена.");
+                }
+                else if (dirInf.Exists)
                 {
                     dirInf.Delete(true);
                     Console.WriteLine("Папка удалена.");
@@ -74,7 +104,7 @@ namespace File_Manager
                 Console.WriteLine(e.Message);
             }
         }
-
+        // TODO: сделать возможность создавать файл в текущей директории и по полному пути
         public void MkFile(string fileName)
         {
             try
@@ -94,7 +124,7 @@ namespace File_Manager
                 Console.WriteLine(e.Message);
             }
         }
-
+        // TODO: сделать возможность создавать папку в текущей директории и по полному пути
         public void MkDir(string dirName)
         {
             try

@@ -14,7 +14,7 @@ namespace File_Manager
         bool exit = true;
 
         public string[] Parser(string userCommand)
-        {            
+        {
             // TODO: добавить визможность писать пути без определения их в кавычки (для путей без пробелов)
             //string[] dirtyCommands = userCommand.Split(new string[] { " \"" }, StringSplitOptions.None);
             string[] dirtyCommands = Regex.Split(userCommand, " \"");
@@ -42,25 +42,25 @@ namespace File_Manager
                 }
 
                 string[] clearCommands = Parser(userCommand);
-                
+
                 userCommand = clearCommands[0].ToLower();
 
-                // TODO: cd для навигации, ls для пэйджинга и отображения вложений в папках
+                // TODO: ls для пэйджинга и отображения вложений в папках
                 // TODO: Отловить исключение с заменой файлов через foreach
 
                 switch (userCommand)
                 {
                     case "cd":
-
+                        fm.ChangeDirectory(ref currentDirectory, clearCommands[1]);
                         break;
                     case "cd..":
-                        fm.ChangeDirrectory(ref currentDirectory);
+                        fm.ParentDirectory(ref currentDirectory);
                         break;
                     case "inf":
                         fm.Information(clearCommands[1]);
                         break;
                     case "rm":
-                        fm.Remove(clearCommands[1]);
+                        fm.Remove(ref currentDirectory, clearCommands[1]);
                         break;
                     case "mkfil":
                         fm.MkFile(clearCommands[1]);
