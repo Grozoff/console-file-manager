@@ -45,31 +45,41 @@ namespace File_Manager
             }
         }
 
-        public void Information(string path)
+        public void Information(string currentDirectory, string path)
         {
-            FileInfo fileInf = new FileInfo(path);
-            DirectoryInfo dirInf = new DirectoryInfo(path);
-            try
+            DirectoryInfo curDirInf = new DirectoryInfo(currentDirectory);
+            if (path == null)
             {
-                if (dirInf.Exists)
-                {
-                    Console.WriteLine(string.Format("Information about directory:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
-                        dirInf.Name, dirInf.EnumerateFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length), dirInf.LastWriteTime, dirInf.CreationTime));
-                }
-                else if (fileInf.Exists)
-                {
-                    Console.WriteLine(string.Format("Information about file:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
-                        fileInf.Name, fileInf.Length, fileInf.LastWriteTime, fileInf.CreationTime));
-                }
-                else
-                {
-                    Console.WriteLine("Папка или файл не найдены!");
-                }
+                Console.WriteLine(string.Format("Information about directory:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
+                        curDirInf.Name, curDirInf.EnumerateFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length), curDirInf.LastWriteTime, curDirInf.CreationTime));
+                return;
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e.Message);
-            }
+                FileInfo fileInf = new FileInfo(path);
+                DirectoryInfo dirInf = new DirectoryInfo(path);
+                try
+                {
+                    if (dirInf.Exists)
+                    {
+                        Console.WriteLine(string.Format("Information about directory:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
+                            dirInf.Name, dirInf.EnumerateFiles("*", SearchOption.AllDirectories).Sum(fi => fi.Length), dirInf.LastWriteTime, dirInf.CreationTime));
+                    }
+                    else if (fileInf.Exists)
+                    {
+                        Console.WriteLine(string.Format("Information about file:\nName: {0}\nSize: {1} bytes\nLast modified on {2}\nCreation time on {3}",
+                            fileInf.Name, fileInf.Length, fileInf.LastWriteTime, fileInf.CreationTime));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Папка или файл не найдены!");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }           
         }
 
         public void Remove(ref string currentDirectory, string path)

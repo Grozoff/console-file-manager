@@ -57,12 +57,12 @@ namespace File_Manager
                         fm.ParentDirectory(ref currentDirectory);
                         break;
                     case "inf":
-                        fm.Information(clearCommands[1]);
+                        fm.Information(currentDirectory, clearCommands[1]);
                         break;
                     case "rm":
                         fm.Remove(ref currentDirectory, clearCommands[1]);
                         break;
-                    case "mkfil":
+                    case "mk":
                         fm.MkFile(clearCommands[1]);
                         break;
                     case "mkdir":
@@ -79,7 +79,7 @@ namespace File_Manager
                         Console.Clear();
                         Console.WriteLine("[help] - Вызвать справку\n[cd] - навигация по каталогам\ncd.. - переход на каталог выше\n" +
                             "cd \"путь к каталогу на текущем диске\"\n[rm] - Удаление файла\\каталога\n" +
-                            "[mkfil] - Создание файла\n[mkdir] - Создание каталога\n[cp] - Копирование файла\\директории\n" +
+                            "[mk] - Создание файла\n[mkdir] - Создание каталога\n[cp] - Копирование файла\\директории\n" +
                             "[exit] - Завершить работу файлового менеджера\nВсе пути к файлу или каталогу необходимо заключать в двойные кавычки!\n");
                         break;
                     default:

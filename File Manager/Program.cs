@@ -10,7 +10,8 @@ namespace File_Manager
         static void Main(string[] args)
         {
             Console.Title = "File Manager";
-            Console.WriteLine("[help]   [cd]    [ls]    [inf]   [rm]    [mkfil]    [mkdir]    [cp]    [exit]\n");
+            Console.WriteLine("[help]   [cd]    [ls]    [inf]   [rm]    [mk]    [mkdir]    [cp]    [exit]\n"); 
+            // TODO: сделать лист с командами и отдельный метод для него!
             Command command = new Command();
             command.Commands();                      
         }
