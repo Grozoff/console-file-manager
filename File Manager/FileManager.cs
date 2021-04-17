@@ -8,6 +8,19 @@ namespace File_Manager
 {
     public class FileManager
     {
+        public void ChangeDirrectory(ref string currentDirectory)
+        {
+            DirectoryInfo parentDirectory = Directory.GetParent(currentDirectory);
+            if (parentDirectory == null)
+            {
+                Console.WriteLine("No parent for the current directory");
+            }
+            else
+            {
+                currentDirectory = parentDirectory.FullName;
+            }
+        }
+
         public void Information(string path)
         {
             FileInfo fileInf = new FileInfo(path);
