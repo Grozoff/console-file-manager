@@ -79,7 +79,7 @@ namespace File_Manager
                 {
                     Console.WriteLine(e.Message);
                 }
-            }           
+            }
         }
 
         public void Remove(ref string currentDirectory, string path)
@@ -135,13 +135,13 @@ namespace File_Manager
             }
         }
         // TODO: сделать возможность создавать папку в текущей директории и по полному пути
-        public void MkDir(string dirName)
+        public void MkDir(string currentDirectory, string dirName)
         {
             try
             {
-                if (!Directory.Exists(dirName))
+                if (!Directory.Exists($"{currentDirectory}\\{dirName}"))
                 {
-                    Directory.CreateDirectory(dirName);
+                    Directory.CreateDirectory($"{currentDirectory}\\{dirName}");
                     Console.WriteLine("Папка создана");
                 }
                 else

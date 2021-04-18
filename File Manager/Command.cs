@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -13,23 +14,77 @@ namespace File_Manager
         string userCommand = string.Empty;
         bool exit = true;
 
+        public void CommandsName(bool description)
+        {
+            var commandsDescriprion = new Dictionary<string, string>
+            {
+                ["cd.."] = " - Переход на каталог выше",
+                ["cd"] = " - Переход к указанному каталогу ",
+                ["rm"] = " - Удаление файла\\каталога",
+                ["mk"] = " - Создание файла",
+                ["mkdir"] = " - Создание каталога",
+                ["cp"] = " - Копирование файла\\директории",
+                ["exit"] = " - Завершить работу файлового менеджера",
+                ["help"] = " - Вызвать справку\nВсе пути к файлу или каталогу необходимо заключать в двойные кавычки!"
+            };
+
+            if (description == false)
+            {
+                foreach (var item in commandsDescriprion)
+                {
+                    Console.Write($"[{item.Key}]    ");
+                }
+                Console.WriteLine();
+            }
+            else
+            {
+                foreach (var item in commandsDescriprion)
+                {
+                    Console.WriteLine($"{item.Key}{item.Value}");
+                }
+                Console.WriteLine();
+            }
+        }
+
         public string[] Parser(string userCommand)
         {
-            // TODO: добавить визможность писать пути без определения их в кавычки (для путей без пробелов)
             //string[] dirtyCommands = userCommand.Split(new string[] { " \"" }, StringSplitOptions.None);
-            string[] dirtyCommands = Regex.Split(userCommand, " \"");
             string[] clearCommands = new string[4];
-
-            for (int i = 0; i < dirtyCommands.Length; i++)
+            if ((userCommand.Count(c => c == '\"') == 0) && (userCommand.Count(c => c == ' ') <= 2))
             {
-                clearCommands[i] = dirtyCommands[i].Trim();
-                clearCommands[i] = Regex.Replace(clearCommands[i], "\"", "");
+                string[] dirtyCommands = Regex.Split(userCommand, " ");
+
+                for (int i = 0; i < dirtyCommands.Length; i++)
+                {
+                    clearCommands[i] = dirtyCommands[i].Trim();
+                    if (clearCommands[i].StartsWith('\\'))
+                    {
+                        clearCommands[i] = clearCommands[i].TrimStart('\\');
+                    }
+                }
             }
+            else if (userCommand.Count(c => c == '\"') >= 2)
+            {
+                string[] dirtyCommands = Regex.Split(userCommand, " \"");
+
+                for (int i = 0; i < dirtyCommands.Length; i++)
+                {
+                    clearCommands[i] = dirtyCommands[i].Trim();
+                    clearCommands[i] = Regex.Replace(clearCommands[i], "\"", "");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Возможно в пути обнаружены пробелы, возьмите путь в двойные кавычки!");
+            }
+
             return clearCommands;
         }
 
         public void Commands()
         {
+            CommandsName(false);
+
             while (exit)
             {
                 Console.WriteLine(string.Format(currentDirectory));
@@ -43,7 +98,14 @@ namespace File_Manager
 
                 string[] clearCommands = Parser(userCommand);
 
-                userCommand = clearCommands[0].ToLower();
+                if (clearCommands[0] is null)
+                {
+                    continue;
+                }
+                else
+                {
+                    userCommand = clearCommands[0].ToLower();
+                }
 
                 // TODO: ls для пэйджинга и отображения вложений в папках
                 // TODO: Отловить исключение с заменой файлов через foreach
@@ -66,7 +128,7 @@ namespace File_Manager
                         fm.MkFile(clearCommands[1]);
                         break;
                     case "mkdir":
-                        fm.MkDir(clearCommands[1]);
+                        fm.MkDir(currentDirectory, clearCommands[1]);
                         break;
                     case "cp":
                         fm.Copy(clearCommands[1], clearCommands[2]);
@@ -77,10 +139,7 @@ namespace File_Manager
                         break;
                     case "help":
                         Console.Clear();
-                        Console.WriteLine("[help] - Вызвать справку\n[cd] - навигация по каталогам\ncd.. - переход на каталог выше\n" +
-                            "cd \"путь к каталогу на текущем диске\"\n[rm] - Удаление файла\\каталога\n" +
-                            "[mk] - Создание файла\n[mkdir] - Создание каталога\n[cp] - Копирование файла\\директории\n" +
-                            "[exit] - Завершить работу файлового менеджера\nВсе пути к файлу или каталогу необходимо заключать в двойные кавычки!\n");
+                        CommandsName(true);
                         break;
                     default:
                         Console.WriteLine("Команда не найдена");
