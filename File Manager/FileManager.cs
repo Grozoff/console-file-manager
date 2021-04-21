@@ -8,7 +8,7 @@ namespace File_Manager
 {
     public class FileManager
     {
-        public void ChangeDirectory(ref string currentDirectory, string directory)
+        public static void ChangeDirectory(ref string currentDirectory, string directory)
         {
             if (directory.StartsWith('\\'))
             {
@@ -32,7 +32,7 @@ namespace File_Manager
             }
         }
 
-        public void ParentDirectory(ref string currentDirectory)
+        public static void ParentDirectory(ref string currentDirectory)
         {
             DirectoryInfo parentDirectory = Directory.GetParent(currentDirectory);
             if (parentDirectory == null)
@@ -45,7 +45,7 @@ namespace File_Manager
             }
         }
 
-        public void Information(string currentDirectory, string path)
+        public static void Information(string currentDirectory, string path)
         {
             DirectoryInfo curDirInf = new DirectoryInfo(currentDirectory);
             if (path == null)
@@ -82,7 +82,7 @@ namespace File_Manager
             }
         }
 
-        public void Remove(ref string currentDirectory, string path)
+        public static void Remove(ref string currentDirectory, string path)
         {
             FileInfo fileInf = new FileInfo(path);
             DirectoryInfo dirInf = new DirectoryInfo(path);
@@ -115,7 +115,7 @@ namespace File_Manager
             }
         }
         // TODO: сделать возможность создавать файл в текущей директории и по полному пути
-        public void MkFile(string fileName)
+        public static void MkFile(string fileName)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace File_Manager
             }
         }
         // TODO: сделать возможность создавать папку в текущей директории и по полному пути
-        public void MkDir(string currentDirectory, string dirName)
+        public static void MkDir(string currentDirectory, string dirName)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace File_Manager
             }
         }
 
-        public void Copy(string path, string newPath)
+        public static void Copy(string path, string newPath)
         {
             // TODO: упростить!!!
             bool overwrite = false;
