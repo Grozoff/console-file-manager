@@ -9,12 +9,11 @@ namespace File_Manager
 {
     public class Command
     {
-        readonly FileManager fm = new FileManager();
         string currentDirectory = Directory.GetCurrentDirectory(); // TODO: сохранять состояние текущей директории
         string userCommand = string.Empty;
         bool exit = true;
 
-        public void CommandsName(bool description)
+        public static void CommandsName(bool description)
         {
             var commandsDescriprion = new Dictionary<string, string>
             {
@@ -46,7 +45,7 @@ namespace File_Manager
             }
         }
 
-        public string[] Parser(string userCommand)
+        public static string[] Parser(string userCommand)
         {
             //string[] dirtyCommands = userCommand.Split(new string[] { " \"" }, StringSplitOptions.None);
             string[] clearCommands = new string[4];
@@ -113,25 +112,25 @@ namespace File_Manager
                 switch (userCommand)
                 {
                     case "cd":
-                        fm.ChangeDirectory(ref currentDirectory, clearCommands[1]);
+                        FileManager.ChangeDirectory(ref currentDirectory, clearCommands[1]);
                         break;
                     case "cd..":
-                        fm.ParentDirectory(ref currentDirectory);
+                        FileManager.ParentDirectory(ref currentDirectory);
                         break;
                     case "inf":
-                        fm.Information(currentDirectory, clearCommands[1]);
+                        FileManager.Information(currentDirectory, clearCommands[1]);
                         break;
                     case "rm":
-                        fm.Remove(ref currentDirectory, clearCommands[1]);
+                        FileManager.Remove(ref currentDirectory, clearCommands[1]);
                         break;
                     case "mk":
-                        fm.MkFile(clearCommands[1]);
+                        FileManager.MkFile(clearCommands[1]);
                         break;
                     case "mkdir":
-                        fm.MkDir(currentDirectory, clearCommands[1]);
+                        FileManager.MkDir(currentDirectory, clearCommands[1]);
                         break;
                     case "cp":
-                        fm.Copy(clearCommands[1], clearCommands[2]);
+                        FileManager.Copy(clearCommands[1], clearCommands[2]);
                         break;
                     case "exit":
                         exit = false;
